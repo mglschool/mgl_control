@@ -1,0 +1,8 @@
+{
+  "name": "Mallawi Governmental Language School - Secondary Control",
+  "description": "نظام إدارة مدرسة ملوي الرسمية للغات - كنترول المرحلة الثانوية، إدارة متكاملة للطلاب، الحضور والغياب برمز QR، رصد الدرجات والامتحانات، التقييمات، السلوك، والتقارير الرسمية.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

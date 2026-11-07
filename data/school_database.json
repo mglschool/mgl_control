@@ -1,0 +1,268 @@
+{
+  "users": [
+    {
+      "id": "usr-admin-1",
+      "username": "MB1",
+      "fullName": "أ. شنودة رأفت رمزي / مدير نظام الكنترول",
+      "email": "mallawigovlanguageschool@gmail.com",
+      "role": "admin",
+      "status": "active",
+      "passwordHash": "$2b$10$/aSqkpnSUyfiD/oKE4miDObNWGupic30ZhiIPsCtpyGxJKFbGmuWy",
+      "mustChangePassword": false,
+      "failedLoginAttempts": 0,
+      "lockedUntil": null,
+      "permissions": {
+        "manageStudents": true,
+        "manageTeachers": true,
+        "manageGrades": true,
+        "takeAttendance": true,
+        "viewReports": true,
+        "manageDiscipline": true,
+        "manageHomework": true,
+        "manageSettings": true
+      },
+      "createdAt": "2026-11-07T20:55:48.951Z",
+      "lastLogin": "2026-11-07T21:26:29.657Z"
+    }
+  ],
+  "accountRequests": [
+    {
+      "id": "req-1",
+      "fullName": "أ. طارق عبد الرحمن علي",
+      "email": "tarek.teacher@minya.moe.edu.eg",
+      "phone": "01023456781",
+      "roleRequested": "معلم لغة عربية - المرحلة الثانوية",
+      "status": "pending",
+      "notes": "معلم أول لغة عربية بمدرسة ملوي الرسمية للغات",
+      "createdAt": "2026-11-07T18:55:48.951Z"
+    }
+  ],
+  "students": [],
+  "subjects": [
+    {
+      "id": "sub-1",
+      "code": "ARB",
+      "nameAr": "اللغة العربية",
+      "nameEn": "Arabic Language",
+      "maxScore": 80,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    },
+    {
+      "id": "sub-2",
+      "code": "ENG",
+      "nameAr": "اللغة الإنجليزية",
+      "nameEn": "English Language",
+      "maxScore": 60,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    },
+    {
+      "id": "sub-3",
+      "code": "SCI",
+      "nameAr": "العلوم المتكاملة",
+      "nameEn": "Integrated Science",
+      "maxScore": 60,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1"
+      ]
+    },
+    {
+      "id": "sub-4",
+      "code": "MTH",
+      "nameAr": "الرياضيات",
+      "nameEn": "Mathematics",
+      "maxScore": 60,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    },
+    {
+      "id": "sub-5",
+      "code": "SOC",
+      "nameAr": "الدراسات الاجتماعية والتاريخ",
+      "nameEn": "Social Studies & History",
+      "maxScore": 40,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    },
+    {
+      "id": "sub-6",
+      "code": "NAT",
+      "nameAr": "التربية الوطنية",
+      "nameEn": "National Education",
+      "maxScore": 20,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    },
+    {
+      "id": "sub-7",
+      "code": "REL",
+      "nameAr": "التربية الدينية",
+      "nameEn": "Religious Education",
+      "maxScore": 20,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    },
+    {
+      "id": "sub-8",
+      "code": "2LANG",
+      "nameAr": "اللغة الأجنبية الثانية (فرنساوي / ألماني)",
+      "nameEn": "Second Foreign Language",
+      "maxScore": 40,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    },
+    {
+      "id": "sub-9",
+      "code": "ENG_AL",
+      "nameAr": "English A Level (مستوى رفيع للغات)",
+      "nameEn": "English Advanced Level",
+      "maxScore": 50,
+      "isElective": false,
+      "isHidden": false,
+      "gradeLevels": [
+        "grade1",
+        "grade2",
+        "grade3"
+      ]
+    }
+  ],
+  "grades": [],
+  "attendance": [],
+  "assessments": [],
+  "homeworks": [],
+  "discipline": [],
+  "auditLogs": [
+    {
+      "id": "log-1794086789657-331",
+      "timestamp": "2026-11-07T21:26:29.657Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1",
+      "action": "LOGIN_SUCCESS",
+      "category": "auth",
+      "details": "تسجيل دخول ناجح للمستخدم: أ. شنودة رأفت رمزي / مدير نظام الكنترول",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "log-1794086784028-935",
+      "timestamp": "2026-11-07T21:26:24.028Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1",
+      "action": "LOGIN_SUCCESS",
+      "category": "auth",
+      "details": "تسجيل دخول ناجح للمستخدم: أ. شنودة رأفت رمزي / مدير نظام الكنترول",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "log-1794086487162-903",
+      "timestamp": "2026-11-07T21:21:27.162Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1",
+      "action": "LOGIN_SUCCESS",
+      "category": "auth",
+      "details": "تسجيل دخول ناجح للمستخدم: أ. شنودة رأفت رمزي / مدير نظام الكنترول",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "log-1794086240944-287",
+      "timestamp": "2026-11-07T21:17:20.944Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1",
+      "action": "LOGIN_SUCCESS",
+      "category": "auth",
+      "details": "تسجيل دخول ناجح للمستخدم: أ. شنودة رأفت رمزي / مدير نظام الكنترول",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "log-1794084963214-440",
+      "timestamp": "2026-11-07T20:56:03.214Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1",
+      "action": "ATTENDANCE_SCAN_QR",
+      "category": "attendance",
+      "details": "تسجيل حضور بالباركود: يوسف رامي سمير بشارة (MOLS-25-202) - الحالة: متأخر",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "log-1794084949048-118",
+      "timestamp": "2026-11-07T20:55:49.048Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1",
+      "action": "LOGIN_SUCCESS",
+      "category": "auth",
+      "details": "تسجيل دخول ناجح للمستخدم: أ. شنودة رأفت رمزي / مدير نظام الكنترول",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "log-1",
+      "timestamp": "2026-11-07T20:55:48.951Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1 (مدير الكنترول)",
+      "action": "INITIALIZE_SYSTEM",
+      "category": "system",
+      "details": "تم تهيئة نظام كنترول مدرسة ملوي الرسمية للغات وقاعدة البيانات بنجاح."
+    }
+  ],
+  "outboxEmails": [
+    {
+      "id": "mail-1",
+      "to": "mallawigovlanguageschool@gmail.com",
+      "subject": "تهيئة نظام كنترول مدرسة ملوي الرسمية للغات - Secondary Control",
+      "html": "<div dir=\"rtl\" style=\"font-family: Arial; padding: 20px;\"><h2>مدرسة ملوي الرسمية للغات</h2><p>تم إعداد وتفعيل نظام Secondary Control وإطلاق السيرفر وقاعدة البيانات بنجاح.</p><p>حساب الإدارة: <strong>MB1</strong></p></div>",
+      "text": "مدرسة ملوي الرسمية للغات - تم إعداد وتفعيل نظام Secondary Control بنجاح. حساب الإدارة: MB1",
+      "sentAt": "2026-11-07T20:55:48.951Z",
+      "status": "sent"
+    }
+  ],
+  "settings": {
+    "schoolNameAr": "مدرسة ملوي الرسمية للغات",
+    "schoolNameEn": "Mallawi Governmental Language School",
+    "controlNameAr": "كنترول المرحلة الثانوية",
+    "controlNameEn": "Secondary Control",
+    "academicYear": "2026 / 2027",
+    "currentTerm": "term1",
+    "allowSelfCheckIn": false,
+    "enableCheckoutQR": true,
+    "smtpConfigured": true,
+    "smtpHost": "smtp.gmail.com",
+    "smtpPort": 587,
+    "smtpUser": "mallawigovlanguageschool@gmail.com"
+  }
+}

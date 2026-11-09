@@ -39,8 +39,10 @@ import {
   Menu,
   X,
   ShieldCheck,
-  Bell
+  Bell,
+  Cloud
 } from 'lucide-react';
+import { testConnection } from './lib/firebase';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -49,6 +51,7 @@ export default function App() {
   const [activeView, setActiveView] = useState<string>('dashboard');
   const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useState<boolean>(false);
   const [isQrScannerOpen, setIsQrScannerOpen] = useState<boolean>(false);
+  const [isCloudConnected, setIsCloudConnected] = useState<boolean | null>(null);
 
   // Dual-theme state
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -118,6 +121,9 @@ export default function App() {
     };
 
     initAuth();
+    testConnection().then((connected) => {
+      setIsCloudConnected(connected);
+    });
   }, []);
 
   const handleLoginSuccess = (user: User, forceChange: boolean) => {
@@ -336,6 +342,24 @@ export default function App() {
               <QrCode className="w-3.5 h-3.5" />
               <span>قارئ QR</span>
             </button>
+
+            {/* Cloud Firestore Online Badge */}
+            <div
+              className={`hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold border transition-colors ${
+                isCloudConnected
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+                  : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+              }`}
+              title="سحابة Firebase Firestore (gen-lang-client-0981115609)"
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isCloudConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
+                }`}
+              />
+              <Cloud className="w-3.5 h-3.5" />
+              <span>{isCloudConnected ? 'سحابة Firestore متصلة' : 'سحابة Firestore جاهزة'}</span>
+            </div>
 
             {/* Academic Year indicator */}
             <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold rounded-xl font-mono">

@@ -173,7 +173,7 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess }) => {
                   dir="ltr"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="e.g. MB1"
+                  placeholder="أدخل اسم المستخدم"
                   required
                   className="w-full pl-3 pr-10 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-600 transition-all font-mono"
                 />
@@ -242,21 +242,6 @@ export const LoginView: React.FC<Props> = ({ onLoginSuccess }) => {
               <UserPlus className="w-3.5 h-3.5 text-red-700" />
               <span>طلب إنشاء حساب جديد للكنترول أو المعلمين</span>
             </button>
-          </div>
-
-          {/* Initial Admin Credentials Helper Note */}
-          <div className="mt-5 p-3 rounded-xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700/60 text-[11px] text-stone-600 dark:text-stone-400 text-right leading-relaxed">
-            <div className="font-bold text-stone-800 dark:text-stone-200 mb-1 flex items-center gap-1">
-              <KeyRound className="w-3 h-3 text-red-600" />
-              <span>بيانات مدير النظام الأولية (Admin):</span>
-            </div>
-            <div className="font-mono text-stone-700 dark:text-stone-300">
-              Username: <strong className="text-red-700 dark:text-red-400">MB1</strong> | Password:{' '}
-              <strong className="text-stone-800 dark:text-stone-200">SHOsho0125</strong>
-            </div>
-            <span className="text-[10px] text-stone-500 block mt-0.5">
-              * حساب مدير الكنترول: أ. شنودة رأفت رمزي.
-            </span>
           </div>
         </div>
 

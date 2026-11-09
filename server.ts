@@ -12,7 +12,24 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+
+function getArgValue(flag: string): string | null {
+  const index = process.argv.indexOf(flag);
+  if (index !== -1 && index + 1 < process.argv.length) {
+    return process.argv[index + 1];
+  }
+  return null;
+}
+
+const portFromArg = getArgValue('--port');
+const hostFromArg = getArgValue('--host');
+
+const PORT = Number(process.env.PORT) || (portFromArg ? Number(portFromArg) : null) || 3000;
+const HOST = process.env.HOST || hostFromArg || '0.0.0.0';
+
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() });
+});
 
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
@@ -1303,15 +1320,17 @@ async function startServer() {
     const distPath = path.resolve(__dirname, 'dist');
     if (fs.existsSync(distPath)) {
       app.use(express.static(distPath));
-      app.get('*', (req, res) => {
+      app.get('*', (_req, res) => {
         res.sendFile(path.join(distPath, 'index.html'));
       });
     }
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[Mallawi School Control Server] Running on http://localhost:${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`[Mallawi School Control Server] Running on http://${HOST}:${PORT}`);
   });
 }
 
-startServer();
+startServer().catch((err) => {
+  console.error('[Mallawi School Control Server] Startup error:', err);
+});

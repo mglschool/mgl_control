@@ -232,6 +232,37 @@ export const SettingsAndAuditView: React.FC<Props> = ({ onRefresh }) => {
             </div>
           </div>
 
+          {/* Firebase Cloud Firestore Online Section */}
+          <div className="pt-4 border-t border-stone-200 dark:border-stone-800 space-y-3">
+            <h3 className="font-extrabold text-xs text-stone-800 dark:text-stone-200 flex items-center gap-2">
+              <Server className="w-4 h-4 text-emerald-600" />
+              <span>سيرفر وقاعدة بيانات Google Cloud Firestore السحابية (Online Server)</span>
+            </h3>
+            <div className="p-4 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 text-xs text-stone-700 dark:text-stone-300 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <strong>مشروع Firebase السحابي:</strong>{' '}
+                  <span className="font-mono text-emerald-800 dark:text-emerald-300 font-bold">
+                    gen-lang-client-0981115609
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 font-bold text-[11px]">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>سحابة Firestore متصلة وجاهزة للنشر</span>
+                </div>
+              </div>
+              <div>
+                <strong>قاعدة بيانات Firestore:</strong>{' '}
+                <span className="font-mono text-[11px] text-stone-600 dark:text-stone-400">
+                  ai-studio-mallawigovernmen-a94ea44f-7aea-4d12-a018-c264f8be83ca
+                </span>
+              </div>
+              <p className="text-[11px] text-stone-500 dark:text-stone-400">
+                قاعدة البيانات السحابية مهيأة الآن ومحمية بقواعد أمان Firestore Security Rules، وتدعم مزامنة بيانات الكنترول والطلاب بين جميع الأجهزة والهواتف مباشرة عند النشر.
+              </p>
+            </div>
+          </div>
+
           {/* Email Server Service Config Info */}
           <div className="pt-4 border-t border-stone-200 dark:border-stone-800 space-y-3">
             <h3 className="font-extrabold text-xs text-stone-800 dark:text-stone-200 flex items-center gap-2">

@@ -1,0 +1,188 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "بيانات طالب المرحلة الثانوية بمدرسة ملوي الرسمية للغات",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "maxLength": 64 },
+        "fullName": { "type": "string", "maxLength": 128 },
+        "nationalId": { "type": "string", "maxLength": 32 },
+        "unifiedEmail": { "type": "string", "maxLength": 128 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "birthDate": { "type": "string", "maxLength": 32 },
+        "gender": { "type": "string", "enum": ["male", "female"] },
+        "grade": { "type": "string", "enum": ["grade1", "grade2", "grade3"] },
+        "sectionClass": { "type": "string", "maxLength": 16 },
+        "parentName": { "type": "string", "maxLength": 128 },
+        "parentPhone": { "type": "string", "maxLength": 32 },
+        "address": { "type": "string", "maxLength": 256 },
+        "photoUrl": { "type": "string", "maxLength": 512 },
+        "status": { "type": "string", "enum": ["enrolled", "transferred_in", "transferred_out", "graduated"] },
+        "qrCodeData": { "type": "string", "maxLength": 256 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["studentId", "fullName", "grade", "sectionClass", "status"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "مادة دراسية مقررة للمرحلة الثانوية",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "maxLength": 32 },
+        "nameAr": { "type": "string", "maxLength": 128 },
+        "nameEn": { "type": "string", "maxLength": 128 },
+        "maxScore": { "type": "number" },
+        "isElective": { "type": "boolean" },
+        "isHidden": { "type": "boolean" }
+      },
+      "required": ["code", "nameAr", "maxScore"]
+    },
+    "GradeRecord": {
+      "title": "GradeRecord",
+      "description": "درجة الطالب في مادة وامتحان محدد",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "maxLength": 64 },
+        "subjectId": { "type": "string", "maxLength": 64 },
+        "examType": { "type": "string", "maxLength": 64 },
+        "score": { "type": "number" },
+        "maxScore": { "type": "number" },
+        "percentage": { "type": "number" },
+        "teacherName": { "type": "string", "maxLength": 128 },
+        "recordedBy": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["studentId", "subjectId", "examType", "score", "maxScore"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "سجل حضور أو غياب يومي للطالب",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "maxLength": 64 },
+        "date": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["present", "absent", "late", "excused"] },
+        "checkInTime": { "type": "string", "maxLength": 32 },
+        "checkOutTime": { "type": "string", "maxLength": 32 },
+        "method": { "type": "string", "enum": ["qr", "manual"] },
+        "recordedBy": { "type": "string", "maxLength": 64 },
+        "notes": { "type": "string", "maxLength": 256 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["studentId", "date", "status"]
+    },
+    "Assessment": {
+      "title": "Assessment",
+      "description": "تقييم صفي وأكاديمي للطالب",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "maxLength": 64 },
+        "category": { "type": "string", "maxLength": 64 },
+        "titleAr": { "type": "string", "maxLength": 128 },
+        "scoreOrGrade": { "type": "string", "maxLength": 64 },
+        "notes": { "type": "string", "maxLength": 512 },
+        "teacherName": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 }
+      },
+      "required": ["studentId", "titleAr", "scoreOrGrade"]
+    },
+    "Homework": {
+      "title": "Homework",
+      "description": "واجب مدرسي مكلف للطلاب",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 128 },
+        "subjectId": { "type": "string", "maxLength": 64 },
+        "grade": { "type": "string", "maxLength": 32 },
+        "sectionClass": { "type": "string", "maxLength": 32 },
+        "description": { "type": "string", "maxLength": 1024 },
+        "assignedDate": { "type": "string", "maxLength": 32 },
+        "dueDate": { "type": "string", "maxLength": 32 },
+        "teacherName": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["title", "subjectId", "grade", "sectionClass"]
+    },
+    "DisciplineRecord": {
+      "title": "DisciplineRecord",
+      "description": "سجل انضباط أو مخالفة أو شهادة تقدير",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "maxLength": 64 },
+        "type": { "type": "string", "enum": ["positive", "infraction", "warning", "certificate", "pedagogical_action"] },
+        "title": { "type": "string", "maxLength": 128 },
+        "details": { "type": "string", "maxLength": 1024 },
+        "actionTaken": { "type": "string", "maxLength": 512 },
+        "recordedBy": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 }
+      },
+      "required": ["studentId", "type", "title"]
+    },
+    "User": {
+      "title": "User",
+      "description": "مستخدم في نظام الكنترول",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "maxLength": 64 },
+        "fullName": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["admin", "teacher", "attendance_officer", "counselor", "custom"] },
+        "status": { "type": "string", "enum": ["active", "suspended", "pending"] },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["username", "fullName", "role", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "سجل عمليات الكنترول",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 64 },
+        "userName": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 64 },
+        "category": { "type": "string", "maxLength": 32 },
+        "details": { "type": "string", "maxLength": 512 }
+      },
+      "required": ["timestamp", "userName", "action", "details"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "قائمة طلاب المرحلة الثانوية"
+    },
+    "/subjects/{subjectId}": {
+      "schema": { "$ref": "#/entities/Subject" },
+      "description": "المواد الدراسية المقررة"
+    },
+    "/grades/{gradeId}": {
+      "schema": { "$ref": "#/entities/GradeRecord" },
+      "description": "درجات امتحانات الكنترول"
+    },
+    "/attendance/{attendanceId}": {
+      "schema": { "$ref": "#/entities/AttendanceRecord" },
+      "description": "سجلات الحضور اليومية برمز QR واليدوية"
+    },
+    "/assessments/{assessmentId}": {
+      "schema": { "$ref": "#/entities/Assessment" },
+      "description": "تقييمات الأداء الصفي"
+    },
+    "/homeworks/{homeworkId}": {
+      "schema": { "$ref": "#/entities/Homework" },
+      "description": "الواجبات والتكليفات المدرسية"
+    },
+    "/discipline/{disciplineId}": {
+      "schema": { "$ref": "#/entities/DisciplineRecord" },
+      "description": "سجلات الانضباط والسلوك والشهادات"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "مستخدمو وأعضاء الكنترول"
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "سجلات التدقيق الأمني"
+    }
+  }
+}

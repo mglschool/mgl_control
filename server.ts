@@ -35,7 +35,7 @@ app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
 // Ensure data directory exists
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'mols_data') : path.join(__dirname, 'data');
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
@@ -1331,6 +1331,10 @@ async function startServer() {
   });
 }
 
-startServer().catch((err) => {
-  console.error('[Mallawi School Control Server] Startup error:', err);
-});
+export default app;
+
+if (!process.env.VERCEL) {
+  startServer().catch((err) => {
+    console.error('[Mallawi School Control Server] Startup error:', err);
+  });
+}

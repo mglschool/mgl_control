@@ -1,17 +1,19 @@
-export type UserRole = 'admin' | 'teacher' | 'attendance_officer' | 'counselor' | 'custom';
+export type UserRole = 'admin' | 'control_member' | 'teacher' | 'attendance_officer' | 'counselor' | 'custom';
 
 export interface UserPermissions {
-  manageStudents: boolean;
-  manageTeachers: boolean;
-  manageGrades: boolean;
-  takeAttendance: boolean;
-  viewReports: boolean;
-  manageDiscipline: boolean;
-  manageHomework: boolean;
-  manageSettings: boolean;
-  assignedGrades?: string[]; // e.g., ['grade1', 'grade2', 'grade3']
-  assignedClasses?: string[]; // e.g., ['1/1', '1/2', '2/1']
-  assignedSubjects?: string[]; // e.g., ['arabic', 'english']
+  manageStudents: boolean;      // Admin & Control Member (إضافة وتعديل وحذف الطلاب)
+  manageTeachers: boolean;      // Admin only (إدارة المعلمين والحسابات)
+  manageGrades: boolean;        // Admin, Control Member, and Teacher (لمادته المسندة فقط)
+  takeAttendance: boolean;      // Admin, Control Member, Attendance Officer (تسجيل الحضور والغياب)
+  viewReports: boolean;         // Admin, Control Member, Teacher
+  manageDiscipline: boolean;    // Admin, Control Member
+  manageHomework: boolean;      // Admin, Control Member, Teacher
+  manageSettings: boolean;      // Admin only (إعدادات الكنترول والنظام)
+  reviewRequests: boolean;      // Admin only (قبول أو رفض طلبات حسابات المعلمين)
+  assignedGrades?: string[];    // e.g., ['grade1', 'grade2', 'grade3']
+  assignedClasses?: string[];   // e.g., ['1/1', '1/2', '2/1']
+  assignedSubjects?: string[];  // معرّفات المواد المسندة للمعلم e.g., ['sub-2']
+  assignedSubjectName?: string; // اسم المادة المسندة e.g., 'اللغة الإنجليزية'
 }
 
 export interface User {
@@ -23,6 +25,8 @@ export interface User {
   status: 'active' | 'suspended' | 'pending';
   mustChangePassword: boolean;
   permissions: UserPermissions;
+  assignedSubjectId?: string;
+  assignedSubjectName?: string;
   failedLoginAttempts?: number;
   lockedUntil?: string | null;
   createdAt: string;

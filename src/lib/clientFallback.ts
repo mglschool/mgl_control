@@ -51,7 +51,8 @@ export const DEFAULT_ADMIN: User = {
     viewReports: true,
     manageDiscipline: true,
     manageHomework: true,
-    manageSettings: true
+    manageSettings: true,
+    reviewRequests: true
   },
   createdAt: '2026-09-01T08:00:00.000Z'
 };
@@ -729,25 +730,35 @@ export const clientFallback = {
     // Approve & Create user
     const username = data.username?.trim() || `user_${Date.now()}`;
     const tempPass = data.temporaryPassword || `Mallawi@${Math.floor(1000 + Math.random() * 9000)}`;
+    const userRole: UserRole = data.role || 'teacher';
+    const assignedSubjectId = data.assignedSubjectId || '';
+    const assignedSubjectName = data.assignedSubjectName || '';
+
+    const permissions: UserPermissions = data.permissions || {
+      manageStudents: userRole === 'admin' || userRole === 'control_member',
+      manageTeachers: userRole === 'admin',
+      manageGrades: userRole === 'admin' || userRole === 'control_member' || userRole === 'teacher',
+      takeAttendance: userRole === 'admin' || userRole === 'control_member' || userRole === 'attendance_officer',
+      viewReports: userRole !== 'attendance_officer',
+      manageDiscipline: userRole === 'admin' || userRole === 'control_member',
+      manageHomework: userRole === 'admin' || userRole === 'control_member' || userRole === 'teacher',
+      manageSettings: userRole === 'admin',
+      reviewRequests: userRole === 'admin',
+      assignedSubjects: assignedSubjectId ? [assignedSubjectId] : (userRole === 'teacher' ? ['sub-2'] : []),
+      assignedSubjectName: assignedSubjectName || (userRole === 'teacher' ? 'اللغة الإنجليزية' : undefined)
+    };
 
     const newUser: User = {
       id: 'usr-' + Date.now(),
       username,
       fullName: req.fullName,
       email: req.email,
-      role: data.role || 'teacher',
+      role: userRole,
       status: 'active',
       mustChangePassword: true,
-      permissions: data.permissions || {
-        manageStudents: data.role === 'admin',
-        manageTeachers: data.role === 'admin',
-        manageGrades: true,
-        takeAttendance: true,
-        viewReports: true,
-        manageDiscipline: true,
-        manageHomework: true,
-        manageSettings: data.role === 'admin'
-      },
+      assignedSubjectId,
+      assignedSubjectName,
+      permissions,
       createdAt: new Date().toISOString()
     };
 

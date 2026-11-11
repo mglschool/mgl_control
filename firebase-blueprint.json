@@ -126,7 +126,7 @@
         "username": { "type": "string", "maxLength": 64 },
         "fullName": { "type": "string", "maxLength": 128 },
         "email": { "type": "string", "maxLength": 128 },
-        "role": { "type": "string", "enum": ["admin", "teacher", "attendance_officer", "counselor", "custom"] },
+        "role": { "type": "string", "enum": ["admin", "control_member", "teacher", "attendance_officer", "counselor", "custom"] },
         "status": { "type": "string", "enum": ["active", "suspended", "pending"] },
         "createdAt": { "type": "string", "maxLength": 64 }
       },

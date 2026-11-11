@@ -27,8 +27,23 @@ const hostFromArg = getArgValue('--host');
 const PORT = Number(process.env.PORT) || (portFromArg ? Number(portFromArg) : null) || 3000;
 const HOST = process.env.HOST || hostFromArg || '0.0.0.0';
 
-app.get('/health', (_req, res) => {
+app.get(['/health', '/api/health'], (_req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() });
+});
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+  // When running on Vercel as /api function, req.url may be /auth/login or /api/auth/login
+  if (req.url && !req.url.startsWith('/api') && req.url !== '/' && !req.url.startsWith('/health') && !req.url.startsWith('/assets')) {
+    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+  }
+  next();
 });
 
 app.use(express.json({ limit: '25mb' }));

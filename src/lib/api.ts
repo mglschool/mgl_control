@@ -43,19 +43,29 @@ async function request<T>(
 
     const contentType = response.headers.get('content-type') || '';
 
-    // If response is HTML (e.g. Vercel SPA routing returning index.html for missing /api endpoints)
+    // If server returned non-JSON (e.g. Vercel 500 error or 404 HTML)
     if (!contentType.includes('application/json')) {
       if (fallbackFn) {
-        console.warn(`[API] Endpoint ${endpoint} returned HTML/non-JSON. Using Firestore client fallback.`);
+        console.warn(`[API] Endpoint ${endpoint} returned non-JSON (${contentType || 'empty'}). Using client fallback.`);
         return await fallbackFn();
       }
       throw new Error('تم استلام رد غير صالح من الخادم.');
     }
 
-    const data = await response.json();
+    let data: any;
+    try {
+      data = await response.json();
+    } catch {
+      if (fallbackFn) {
+        console.warn(`[API] JSON parse failed on ${endpoint}. Using client fallback.`);
+        return await fallbackFn();
+      }
+      throw new Error('تعذر قراءة بيانات الرد من الخادم.');
+    }
 
     if (!response.ok) {
-      if (response.status === 404 && fallbackFn) {
+      if ((response.status === 404 || response.status >= 500) && fallbackFn) {
+        console.warn(`[API] Server returned ${response.status}. Using client fallback.`);
         return await fallbackFn();
       }
       throw new Error(data.error || 'حدث خطأ في الاتصال بالسيرفر');
@@ -64,7 +74,7 @@ async function request<T>(
     return data;
   } catch (err: any) {
     if (fallbackFn) {
-      console.warn(`[API] Request failed on ${endpoint}, activating Firestore client fallback:`, err?.message || err);
+      console.warn(`[API] Request failed on ${endpoint}, activating client fallback:`, err?.message || err);
       return await fallbackFn();
     }
     throw err;

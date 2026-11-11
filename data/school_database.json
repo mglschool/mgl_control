@@ -22,7 +22,32 @@
         "manageSettings": true
       },
       "createdAt": "2026-11-07T20:55:48.951Z",
-      "lastLogin": "2026-11-07T21:26:29.657Z"
+      "lastLogin": "2026-11-11T22:57:30.688Z"
+    },
+    {
+      "id": "usr-1794392554120",
+      "username": "BB8",
+      "fullName": "أ. ابانوب (معلم)",
+      "email": "tytw29518@gmail.com",
+      "role": "teacher",
+      "status": "active",
+      "passwordHash": "$2b$10$.k5lrlmqd/8cCy824oQbWOVt0lfEMJuZEHQNEEJzOBkIh8sEduwlW",
+      "temporaryPassword": "Mallawi@2026",
+      "mustChangePassword": true,
+      "failedLoginAttempts": 0,
+      "lockedUntil": null,
+      "permissions": {
+        "manageStudents": false,
+        "manageTeachers": false,
+        "manageGrades": true,
+        "takeAttendance": true,
+        "viewReports": true,
+        "manageDiscipline": true,
+        "manageHomework": true,
+        "manageSettings": false
+      },
+      "createdAt": "2026-11-11T22:57:49.318Z",
+      "lastLogin": "2026-11-11T22:57:56.667Z"
     }
   ],
   "accountRequests": [
@@ -170,6 +195,26 @@
   "homeworks": [],
   "discipline": [],
   "auditLogs": [
+    {
+      "id": "log-1794437876667-726",
+      "timestamp": "2026-11-11T22:57:56.667Z",
+      "userId": "usr-1794392554120",
+      "userName": "BB8",
+      "action": "LOGIN_SUCCESS",
+      "category": "auth",
+      "details": "تسجيل دخول ناجح للمستخدم: أ. ابانوب (معلم)",
+      "ip": "127.0.0.1"
+    },
+    {
+      "id": "log-1794437850688-403",
+      "timestamp": "2026-11-11T22:57:30.688Z",
+      "userId": "usr-admin-1",
+      "userName": "MB1",
+      "action": "LOGIN_SUCCESS",
+      "category": "auth",
+      "details": "تسجيل دخول ناجح للمستخدم: أ. شنودة رأفت رمزي / مدير نظام الكنترول",
+      "ip": "127.0.0.1"
+    },
     {
       "id": "log-1794086789657-331",
       "timestamp": "2026-11-07T21:26:29.657Z",

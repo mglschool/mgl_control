@@ -192,4 +192,6 @@ export interface SystemSettings {
   smtpHost?: string;
   smtpPort?: number;
   smtpUser?: string;
+  smtpPass?: string;
+  resendApiKey?: string;
 }

@@ -4,6 +4,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
 import { createServer as createViteServer } from 'vite';
 
 dotenv.config();
@@ -152,7 +153,8 @@ function getInitialDatabase() {
       smtpConfigured: true,
       smtpHost: 'smtp.gmail.com',
       smtpPort: 587,
-      smtpUser: 'mallawigovlanguageschool@gmail.com'
+      smtpUser: 'mallawigovlanguageschool@gmail.com',
+      smtpPass: 'gfde rfez pvyj ngda'
     }
   };
 }
@@ -201,6 +203,96 @@ function addAuditLog(db: any, userId: string, userName: string, action: string, 
   if (db.auditLogs.length > 500) {
     db.auditLogs = db.auditLogs.slice(0, 500);
   }
+}
+
+// Real Email Sending Engine via Nodemailer & Web API
+async function sendRealEmail({
+  to,
+  subject,
+  html,
+  text,
+  settings
+}: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+  settings?: any;
+}): Promise<{ delivered: boolean; error?: string; provider?: string }> {
+  const smtpHost = settings?.smtpHost || process.env.SMTP_HOST || 'smtp.gmail.com';
+  const smtpPort = Number(settings?.smtpPort || process.env.SMTP_PORT) || 587;
+  const smtpUser = settings?.smtpUser || process.env.SMTP_USER || 'mallawigovlanguageschool@gmail.com';
+  const rawPass = settings?.smtpPass || process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || '';
+  const smtpPass = rawPass.replace(/\s+/g, '');
+  const resendApiKey = settings?.resendApiKey || process.env.RESEND_API_KEY;
+
+  console.log(`[Email Service] Attempting delivery to: "${to}" from: "${smtpUser}" (Host: ${smtpHost}:${smtpPort})`);
+
+  // 1. Try Resend HTTP API if key provided
+  if (resendApiKey) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: `مدرسة ملوي الرسمية للغات <onboarding@resend.dev>`,
+          to: [to],
+          subject,
+          html,
+          text
+        })
+      });
+      if (res.ok) {
+        console.log('[Email Service] Email dispatched successfully via Resend HTTP API.');
+        return { delivered: true, provider: 'resend' };
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        console.warn('[Email Service] Resend API error:', errJson);
+      }
+    } catch (e: any) {
+      console.warn('[Email Service] Resend API request failed:', e?.message);
+    }
+  }
+
+  // 2. Nodemailer SMTP (e.g. Gmail App Password or custom SMTP server)
+  if (smtpPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpPort === 465,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass
+        },
+        tls: {
+          rejectUnauthorized: false
+        }
+      });
+
+      const info = await transporter.sendMail({
+        from: `"مدرسة ملوي الرسمية للغات - Secondary Control" <${smtpUser}>`,
+        to,
+        subject,
+        html,
+        text
+      });
+
+      console.log('[Email Service] Email sent successfully via SMTP. MessageId:', info.messageId);
+      return { delivered: true, provider: 'smtp' };
+    } catch (err: any) {
+      console.error('[Email Service] SMTP send error:', err?.message || err);
+      return { delivered: false, error: `تعذر الإرسال عبر SMTP: ${err?.message || 'خطأ غير معروف'}` };
+    }
+  }
+
+  return {
+    delivered: false,
+    error: 'لم يتم إدخال كود مرور التطبيقات (Gmail App Password) في إعدادات الكنترول بعد.'
+  };
 }
 
 // Authentication Middleware
@@ -455,7 +547,7 @@ app.get('/api/account-requests', authenticateToken, (req, res) => {
 });
 
 // POST /api/account-requests/:id/review
-app.post('/api/account-requests/:id/review', authenticateToken, (req, res) => {
+app.post('/api/account-requests/:id/review', authenticateToken, async (req, res) => {
   const user = (req as any).user;
   if (user.role !== 'admin') {
     res.status(403).json({ error: 'صلاحية غير كافية.' });
@@ -529,7 +621,9 @@ app.post('/api/account-requests/:id/review', authenticateToken, (req, res) => {
   request.reviewedAt = new Date().toISOString();
   request.reviewedBy = user.username;
 
-  // Real Email Dispatch to Outbox
+  const loginUrl = `${req.protocol}://${req.get('host')}`;
+
+  // Real Email Dispatch to Outbox & Internet
   const emailEntry = {
     id: `mail-${Date.now()}`,
     to: request.email,
@@ -538,29 +632,57 @@ app.post('/api/account-requests/:id/review', authenticateToken, (req, res) => {
       <div dir="rtl" style="font-family: Arial, sans-serif; padding: 25px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
         <h2 style="color: #c8102e; margin-top: 0;">مدرسة ملوي الرسمية للغات</h2>
         <p>أهلاً بك <strong>${request.fullName}</strong>،</p>
-        <p>يسعدنا إبلاغك بأنه تمت الموافقة على طلب انضمامك إلى نظام الكنترول المدرسي (Secondary Control).</p>
-        <div style="background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; margin: 20px 0;">
-          <p style="margin: 5px 0;"><strong>اسم المستخدم (Username):</strong> <span style="font-family: monospace; font-size: 16px; color: #c8102e;">${username.trim()}</span></p>
-          <p style="margin: 5px 0;"><strong>كلمة المرور المؤقتة:</strong> <span style="font-family: monospace; font-size: 16px;">${tempPass}</span></p>
+        <p>يسعدنا إبلاغك بأنه تمت الموافقة على طلب انضمامك إلى نظام الكنترول المدرسي (Secondary Control) من قِبل إدارة الكنترول.</p>
+        <div style="background: #f8fafc; padding: 18px; border-radius: 8px; border: 1px solid #e2e8f0; margin: 20px 0;">
+          <p style="margin: 6px 0;"><strong>اسم المستخدم (Username):</strong> <span style="font-family: monospace; font-size: 16px; color: #c8102e; font-weight: bold;">${username.trim()}</span></p>
+          <p style="margin: 6px 0;"><strong>كلمة المرور المؤقتة:</strong> <span style="font-family: monospace; font-size: 16px; font-weight: bold;">${tempPass}</span></p>
+          <p style="margin: 6px 0;"><strong>رابط الدخول للنظام:</strong> <a href="${loginUrl}" style="color: #2563eb; font-weight: bold;">${loginUrl}</a></p>
         </div>
-        <p style="color: #dc2626; font-weight: bold;">تنبيه أمني: سيطلب منك النظام تغيير كلمة المرور عند أول تسجيل دخول لضمان أمان حسابك.</p>
+        <p style="color: #dc2626; font-weight: bold;">تنبيه أمني: سيطلب منك النظام تغيير كلمة المرور عند أول تسجيل دخول لضمان خصوصية حسابك.</p>
+        <p style="color: #64748b; font-size: 12px; margin-top: 25px;">مدرسة ملوي الرسمية للغات - كنترول المرحلة الثانوية</p>
       </div>
     `,
-    text: `مدرسة ملوي الرسمية للغات - تم تفعيل حسابك. اسم المستخدم: ${username.trim()} وكلمة المرور المؤقتة: ${tempPass}`,
+    text: `مدرسة ملوي الرسمية للغات - تم تفعيل حسابك. اسم المستخدم: ${username.trim()} وكلمة المرور المؤقتة: ${tempPass} - رابط الدخول: ${loginUrl}`,
     sentAt: new Date().toISOString(),
-    status: 'sent',
-    activationToken
+    status: 'pending' as 'pending' | 'sent' | 'failed',
+    activationToken,
+    notes: ''
   };
+
+  const sendResult = await sendRealEmail({
+    to: request.email,
+    subject: emailEntry.subject,
+    html: emailEntry.html,
+    text: emailEntry.text,
+    settings: db.settings
+  });
+
+  emailEntry.status = sendResult.delivered ? 'sent' : 'failed';
+  if (sendResult.error) {
+    emailEntry.notes = sendResult.error;
+  }
 
   if (!db.outboxEmails) db.outboxEmails = [];
   db.outboxEmails.unshift(emailEntry);
 
-  addAuditLog(db, user.id, user.username, 'USER_CREATED', 'auth', `تمت الموافقة وإنشاء حساب للمستخدم: ${username.trim()} (${request.fullName})`, req);
+  addAuditLog(
+    db,
+    user.id,
+    user.username,
+    'USER_CREATED',
+    'auth',
+    `تمت الموافقة وإنشاء حساب للمستخدم: ${username.trim()} (${request.fullName}) - حالة إرسال البريد: ${sendResult.delivered ? 'تم الإرسال بنجاح' : sendResult.error}`,
+    req
+  );
   saveDb(db);
 
   res.json({
     success: true,
-    message: 'تم تفعيل الحساب وإرسال البريد الإلكتروني للمستخدم.',
+    message: sendResult.delivered
+      ? `تم تفعيل الحساب وإرسال البريد الإلكتروني تلقائياً إلى (${request.email}) بنجاح.`
+      : `تم تفعيل الحساب بنجاح. تنبيه خادم البريد: ${sendResult.error}`,
+    emailDelivered: sendResult.delivered,
+    emailError: sendResult.error,
     temporaryPassword: tempPass,
     username: username.trim()
   });
@@ -1294,6 +1416,42 @@ app.post('/api/system/settings', authenticateToken, (req, res) => {
   addAuditLog(db, user.id, user.username, 'SETTINGS_UPDATED', 'system', 'تعديل إعدادات النظام المدرسية', req);
   saveDb(db);
   res.json({ success: true, settings: db.settings });
+});
+
+// POST /api/system/test-email
+app.post('/api/system/test-email', authenticateToken, async (req, res) => {
+  const user = (req as any).user;
+  if (user.role !== 'admin') {
+    res.status(403).json({ error: 'صلاحية غير كافية.' });
+    return;
+  }
+  const { toEmail } = req.body;
+  const db = loadDb();
+  const targetEmail = toEmail || db.settings?.smtpUser || 'mallawigovlanguageschool@gmail.com';
+
+  const sendResult = await sendRealEmail({
+    to: targetEmail,
+    subject: 'اختبار سيرفر البريد الإلكتروني - مدرسة ملوي الرسمية للغات',
+    html: `
+      <div dir="rtl" style="font-family: Arial, sans-serif; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <h2 style="color: #c8102e; margin-top: 0;">مدرسة ملوي الرسمية للغات - Secondary Control</h2>
+        <p>مرحباً <strong>${user.fullName}</strong>،</p>
+        <p>هذه رسالة اختبارية لتأكيد عمل سيرفر البريد الإلكتروني بنجاح.</p>
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 15px; border-radius: 6px; color: #166534; font-weight: bold; margin: 15px 0;">
+          ✓ تم التحقق: سيرفر البريد متصل ويعمل تلقائياً عند قبول طلبات المعلمين وأعضاء الكنترول بدون أي تدخل يدوي منك.
+        </div>
+        <p style="color: #64748b; font-size: 12px;">تاريخ ووقت الاختبار: ${new Date().toLocaleString('ar-EG')}</p>
+      </div>
+    `,
+    text: 'مدرسة ملوي الرسمية للغات - اختبار سيرفر البريد ناجح.',
+    settings: db.settings
+  });
+
+  if (sendResult.delivered) {
+    res.json({ success: true, message: `تم إرسال بريد الاختبار بنجاح إلى (${targetEmail}).` });
+  } else {
+    res.status(400).json({ error: sendResult.error || 'فشل إرسال البريد التجريبي.' });
+  }
 });
 
 app.get('/api/system/backup', authenticateToken, (req, res) => {

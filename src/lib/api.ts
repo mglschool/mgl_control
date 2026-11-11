@@ -350,5 +350,15 @@ export const api = {
         body: JSON.stringify(settings)
       },
       () => clientFallback.updateSettings(settings)
+    ),
+
+  testEmail: (data: { toEmail: string }) =>
+    request<{ success: boolean; message: string }>(
+      '/api/system/test-email',
+      {
+        method: 'POST',
+        body: JSON.stringify(data)
+      },
+      () => clientFallback.testEmail(data.toEmail)
     )
 };

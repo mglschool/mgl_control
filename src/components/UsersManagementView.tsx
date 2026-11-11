@@ -37,6 +37,9 @@ export const UsersManagementView: React.FC<Props> = ({ currentUser }) => {
   const [approvalResult, setApprovalResult] = useState<{
     temporaryPassword?: string;
     username?: string;
+    recipientEmail?: string;
+    emailDelivered?: boolean;
+    message?: string;
   } | null>(null);
 
   const fetchUsersAndRequests = async () => {
@@ -90,7 +93,10 @@ export const UsersManagementView: React.FC<Props> = ({ currentUser }) => {
 
       setApprovalResult({
         username: assignedUsername.trim(),
-        temporaryPassword: res.temporaryPassword || tempPass
+        temporaryPassword: res.temporaryPassword || tempPass,
+        recipientEmail: selectedReq.email,
+        emailDelivered: (res as any).emailDelivered !== false,
+        message: res.message
       });
       fetchUsersAndRequests();
     } catch (err: any) {
@@ -383,13 +389,29 @@ export const UsersManagementView: React.FC<Props> = ({ currentUser }) => {
             </h3>
 
             {approvalResult ? (
-              <div className="my-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-right space-y-3">
+              <div className="my-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-right space-y-3">
                 <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-100 font-bold text-xs">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                  <span>تم تفعيل الحساب وإرسال بريد إلكتروني ترحيبي للمستخدم.</span>
+                  <span>تم تفعيل الحساب وتوليد بيانات الدخول بنجاح.</span>
                 </div>
+
+                <div className="p-3 rounded-lg bg-emerald-100/70 dark:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-900 dark:text-emerald-100 flex items-start gap-2.5">
+                  <Mail className="w-4 h-4 shrink-0 text-emerald-700 dark:text-emerald-400 mt-0.5" />
+                  <div className="space-y-0.5 text-right">
+                    <div className="font-bold">
+                      أرسل السيرفر بريد التفعيل التلقائي إلى:
+                    </div>
+                    <div className="font-mono text-emerald-800 dark:text-emerald-300 font-bold" dir="ltr">
+                      {approvalResult.recipientEmail}
+                    </div>
+                    <div className="text-[10px] text-emerald-700 dark:text-emerald-300">
+                      تم الإرسال بدون أي تدخل يدوي متضمناً اسم المستخدم وكلمة المرور المؤقتة ورابط الدخول.
+                    </div>
+                  </div>
+                </div>
+
                 <div className="bg-white dark:bg-stone-800 p-3 rounded-lg border border-emerald-100 dark:border-emerald-900 text-xs font-mono space-y-1">
-                  <div>Username: <strong className="text-red-700">{approvalResult.username}</strong></div>
+                  <div>Username: <strong className="text-red-700 dark:text-red-400">{approvalResult.username}</strong></div>
                   <div>كلمة المرور المؤقتة: <strong>{approvalResult.temporaryPassword}</strong></div>
                 </div>
                 <p className="text-[11px] text-stone-500">

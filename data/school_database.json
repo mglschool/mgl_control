@@ -263,6 +263,7 @@
     "smtpConfigured": true,
     "smtpHost": "smtp.gmail.com",
     "smtpPort": 587,
-    "smtpUser": "mallawigovlanguageschool@gmail.com"
+    "smtpUser": "mallawigovlanguageschool@gmail.com",
+    "smtpPass": "gfde rfez pvyj ngda"
   }
 }
